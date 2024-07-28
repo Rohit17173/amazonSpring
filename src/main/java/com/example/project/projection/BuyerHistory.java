@@ -1,12 +1,13 @@
 package com.example.project.projection;
 
-public interface CartProduct {
-	
+public interface BuyerHistory {
+
 	int getId();
 	String getName();
-	int getPrice();
-	int getQuantity();
 	String getDescription();
+	int getPrice();
 	double getDiscount();
-	int getRating();
+	int getQuantity();
+	double getTotal();
+	int getProductid();
 }

@@ -14,6 +14,8 @@ import com.example.project.model.Cart;
 import com.example.project.model.MyOrder;
 import com.example.project.model.OrderProduct;
 import com.example.project.model.Product;
+import com.example.project.model.Ratings;
+import com.example.project.projection.BuyerHistory;
 import com.example.project.projection.CartProduct;
 import com.example.project.projection.productUiBuyer;
 import com.example.project.repo.CartRepo;
@@ -21,6 +23,7 @@ import com.example.project.repo.MyOrderRepo;
 import com.example.project.repo.OrderProductRepo;
 import com.example.project.repo.ProductRepo;
 //import com.example.project.projection.productUiBuyer;
+import com.example.project.repo.RatingRepo;
 
 @RestController
 @CrossOrigin
@@ -38,6 +41,9 @@ public class BuyerController {
 	
 	@Autowired
 	OrderProductRepo orderProductRepo;
+	
+	@Autowired
+	RatingRepo ratingRepo;
 	
 	@RequestMapping("getProductByFilter")
 	public List<productUiBuyer> getProductByFilter(@RequestBody int[] a){
@@ -90,6 +96,8 @@ public class BuyerController {
 				
 				obj.setDate(new Date());
 				obj.setProductid(productid);
+				obj.setMyorderid(order.getId());    //extra line
+				obj.setQuantity(quantity);
 				
 				orderProductRepo.save(obj);
 				
@@ -104,6 +112,53 @@ public class BuyerController {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	@RequestMapping("history/{id}")
+	public List<BuyerHistory> historyProduct(@PathVariable int id){
+		return orderProductRepo.getProductHistory(id);
+	}
+	
+	@RequestMapping("addRating")
+	public int addRating(@RequestBody int[] a){
+		try {
+			int userid=a[0];
+			int productid=a[1];
+			int stars=a[2];
+			int count=ratingRepo.countByProductidAndUserid(productid, userid);
+			
+			System.out.println(count);
+			if (count==1) {
+				Ratings rev=ratingRepo.findByUseridAndProductid(userid, productid);
+				rev.setStars(stars);
+				rev.setDate(new Date());
+				ratingRepo.save(rev);
+			} else if(count==0){
+				Ratings r=new Ratings();
+				r.setDate(new Date());
+				r.setProductid(productid);
+				r.setStars(stars);
+				r.setUserid(userid);
+				ratingRepo.save(r);
+			}else 
+			{
+				return 0;
+			}
+			double avg=ratingRepo.getAvgRatingByProductid(productid);
+			Product product=productRepo.findById(productid).get();
+			product.setRating(avg);
+			productRepo.save(product);
+			return 1;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return 0;
+		}
+		
+		
+		
+		
+		
 	}
 	
 }

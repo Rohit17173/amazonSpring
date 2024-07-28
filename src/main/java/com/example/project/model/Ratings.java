@@ -13,19 +13,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-public class OrderProduct {
-
+@Getter@Setter@NoArgsConstructor@ToString@AllArgsConstructor
+public class Ratings {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private Date date;
-	private int myorderid;
-	private double Amount;
+	private int userid;
 	private int productid;
-	private int quantity;
+	private int stars;
 }
