@@ -9,5 +9,6 @@ public interface UserRepo extends JpaRepository<User, Integer>{
 	public int countByUsername(String username);
 	
 	public User findByUsername(String username);
+	
 
 }

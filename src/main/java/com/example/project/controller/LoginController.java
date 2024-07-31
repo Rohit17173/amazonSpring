@@ -19,6 +19,11 @@ class LoginController {
 	@Autowired
 	UserRepo userRepo;
 	
+	@RequestMapping("hello")
+	public String hello() {
+		return "hello";
+	}
+	
 	@RequestMapping("name{id}")
 	public String[] getname(@PathVariable int id) {
 		User user =userRepo.findById(id).get();
@@ -29,13 +34,10 @@ class LoginController {
 	
 	@RequestMapping("log")
 	public LoginReturn login(@RequestBody String[] str) {
-		
 		if(str==null) {
 			return new LoginReturn(-1, -1, "data Corrupted");
 		}
-		
 		String username=str[0];
-		
 		if (username==null || username.length()<1) {
 			return new LoginReturn(-1, -1, "Enter username");
 		}
@@ -61,8 +63,31 @@ class LoginController {
 		}else {
 			return new LoginReturn(-1, -1, "password wrong");
 		}
+	}
+
+	@RequestMapping("register")
+	public int login(@RequestBody User user) {
+		if(user==null) {
+			return 0;
+		}
+		String username=user.getUsername();
+		if (username==null || username.length()<1) {
+			return 1;
+		}
+		String password=user.getPassword();
+		if (password==null || password.length()<1) {
+			return 2;
+		}
 		
+		int count = userRepo.countByUsername(username);
 		
+		if (count==0) {
+			userRepo.save(user);
+			return 4;
+		}else {
+			return  3;
+		}
+
 	}
 
 }
