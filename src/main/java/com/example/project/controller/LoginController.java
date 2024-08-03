@@ -67,7 +67,8 @@ class LoginController {
 
 	@RequestMapping("register")
 	public int login(@RequestBody User user) {
-		if(user==null) {
+		
+		if(user== null) {
 			return 0;
 		}
 		String username=user.getUsername();

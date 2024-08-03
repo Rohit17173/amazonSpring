@@ -23,12 +23,22 @@ public class AdminController {
 
 	@Autowired
 	CateegoryRepo repo;
+	@Autowired
+	UserRepo UserRepo;
 	
 	@RequestMapping("getAll")
 	public List<Cateogory> GetAll(){
 		return repo.findAll();
 	}
-	
+	@RequestMapping("getSeller")
+	public List<User> GetSeller(){
+		return UserRepo.findByAccountType(2);
+	}
+	@RequestMapping("getBuyer")
+	public List<User> GetBuyer(){
+		System.out.println(UserRepo.findByAccountType(3));
+		return UserRepo.findByAccountType(3);
+	}
 	@RequestMapping("addCat{id}")
 	public Cateogory addCategory(@PathVariable int id,@RequestBody String name){
 		Cateogory c=new Cateogory();
