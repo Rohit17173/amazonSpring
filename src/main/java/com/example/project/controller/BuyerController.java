@@ -4,6 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +53,34 @@ public class BuyerController {
 	public List<productUiBuyer> getProductByFilter(@RequestBody int[] a){
 		return productRepo.getProductByFilter(a[0], a[1], a[2], a[3]);
 	}
+	
+	@RequestMapping("getProduct")
+	public List<Product> getProduct(){
+		
+		Pageable p = PageRequest.of(0, 20);
+		 Page<Product> page = productRepo.findAll(p);
+		 return page.getContent();
+	}
+	
+	@RequestMapping("getSearched/{searchTerm}")
+	public List<Product> getSearchedProducts(@PathVariable String searchTerm){
+		int pageNo=0;
+		 int pageSize = 20;
+		String sortDir = Sort.Direction.ASC.name();
+//		String searchTerm="acer";
+		
+		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
+                ? Sort.by("name").ascending()
+                : Sort.by("name").descending();
+		
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		
+		Page<Product> page = productRepo.findByNameContaining(searchTerm, pageable);
+		
+		
+		return page.getContent();
+	}
+	
 	
 	@RequestMapping("addToCart/{pid}/{uid}")
 	public int addCartProduct(@PathVariable int pid,@PathVariable int uid){

@@ -2,6 +2,8 @@ package com.example.project.repo;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +20,10 @@ public interface ProductRepo extends JpaRepository<Product, Integer> {
 
 	@Query(value = "select id,name,price,rating,discount,description,quantity,datediff(now(),date) as days from amazon.product where categoryid=:i and price >=:j and price <= :k and rating<= :l", nativeQuery = true)
 	List<productUiBuyer> getProductByFilter(@Param("i") int i,@Param("j") int j,@Param("k") int k,@Param("l") int l);
+
+	Page<Product> findByNameContaining(String searchTerm, Pageable pageable);
+	
+	@Query("SELECT p FROM Product p WHERE p.name LIKE %:searchTerm% OR p.description LIKE %:searchTerm%")
+    Page<Product> findByNameOrDescriptionContaining(@Param("searchTerm") String searchTerm, Pageable pageable);
 
 }

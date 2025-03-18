@@ -1,7 +1,5 @@
 package com.example.project.model;
 
-
-
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -16,19 +14,12 @@ import lombok.ToString;
 
 @Entity
 @Getter@Setter@NoArgsConstructor@ToString@AllArgsConstructor
-public class Product {
+public class Profile {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String name;
-	private Date date;
-	private int price;
-	private int quantity;
-	private double rating;
-	private String description;
-	private double discount;
-	String image;
-	private int categoryid;
-	private int userid;
-	
+	int age;
+	String address;
+	int userid;
 }
